@@ -1,0 +1,45 @@
+<div class="product-card" [class.out-of-stock]="!product.inStock" >
+
+    <div class="card-header" >
+        <span class="category-badge" >{{ product.category }}</span>
+        <span class="stock-status" > {{ product.inStock | stockStatus }} </span>
+    </div>
+
+    <div class="card-body" >
+        <h3 class="product-name" > {{product.name}} </h3>
+        <p class="product-description">{{product.description}}</p>
+
+        <div class="price-section">
+            <div *ngIf="showDiscount && discountPercent > 0; else normalPrice" >
+                <p class="original-price">{{product.price | currency:'USD'}}</p>
+                <p class="discounted-price">
+                    {{ product.price | discount:discountPercent | currency:'USD' }}
+                    <span class="discount-badge" >-{{discountPercent}}%</span>
+                </p>
+            </div>
+            <ng-template #normalPrice>
+                <p class="price">{{product.price | currency:'USD'}}</p>
+            </ng-template>
+        </div>
+
+        <div class="product-info">
+            <small class="created-date">Agregado: {{ product.createAt }}</small>
+        </div>
+
+        <div class="card-actions">
+            <button
+                (click)="onViewDetails()"
+                class="btn btn-info"
+                [disabled]="!product.inStock">   
+                Ver Detalles
+            </button>
+
+            <button
+                (click)="onDelete()"
+                class="btn btn-danger"
+            >
+                Eliminar
+            </button>
+        </div>
+    </div>
+</div>
