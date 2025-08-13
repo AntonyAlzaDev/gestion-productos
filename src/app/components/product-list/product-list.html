@@ -1,0 +1,99 @@
+<div class="product-list-container">
+    <div class="stats-header">
+        <h2> Gestion de Productos </h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" >{{ totalProducts }}</div>  
+                <div class="stat-label" >Total Productos</div> 
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" >{{ productsInStock }}</div>  
+                <div class="stat-label" >En Stock</div> 
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" >{{ totalFilteredProducts }}</div>  
+                <div class="stat-label" > Mostrando </div> 
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="filters-section">
+        <div class="filters-row">
+            <div class="search-box" >
+                <input 
+                type="text"
+                [(ngModel)] = "searchTerm"
+                (input)="onSearchChange()"
+                placeholder="Buscar productos..."
+                class="search-input"
+                >
+            </div>
+
+            <div class="category-filter" >
+                <select 
+                [(ngModel)] = "selectedCategory"
+                (change)="onCategoryChange()"
+                class="category-select">
+
+                <option value="all"> Todas las categorías</option>
+                <option *ngFor="let category of categories.slice(1)" [value]="category" >
+                    {{ category }}
+                </option>
+                </select>
+            </div>
+            
+            <div class="discount-controls">
+                <label class="discount-toggle">
+                    <input type="checkbox"
+                    [(ngModel)]="showDiscount"
+                    >
+                    Mostrar descuentos
+                </label>
+            </div>
+
+        </div>
+
+        <div class="active-filters" *ngIf = "selectedCategory !== 'all' || searchTerm.trim() ">
+            <span class="filter-info" >
+                Mostrando {{ totalFilteredProducts }} productos
+            </span>
+            <button
+                class="clear-filters-btn"
+                (click)="selectedCategory='all'; searchTerm=''; applyFilters();"
+            >
+            Limpiar Filtros
+            </button>
+        </div>
+    </div>
+    
+    <div class="products-grid">
+        <app-product-card
+        *ngFor="let product of filteredProducts; trackBy: trackByProductId"
+        [product] = "product"
+        [showDiscount] = "showDiscount"
+        [discountPercent] = "discountPercent"
+
+        (deleteProduct) = "onDeleteProduct($event)"
+        (viewDetails) = "onViewDetails($event)"
+        >
+        </app-product-card>
+
+    </div>
+
+    <div *ngIf="filteredProducts.length === 0" class="empty-state">
+        <div class="empty-icon" >X</div>
+        <h3>No hay productos</h3>
+
+        <button 
+         *ngIf="selectedCategory !== 'all' || searchTerm.trim()"
+         class="clear-filters-btn"
+         (click)="selectedCategory='all'; searchTerm=''; applyFilters();"
+        >
+
+        </button>
+    </div>
+
+
+</div>
